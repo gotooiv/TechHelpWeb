@@ -1,0 +1,51 @@
+﻿@model TechHelpWeb.Models.PerfilViewModel
+@{
+    ViewBag.Title = "Mi Perfil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard" style="display: flex; justify-content: center; align-items: center; min-height: 75vh;">
+
+    <div class="card" style="width: 100%; max-width: 500px;">
+
+        <h2 class="card-title" style="margin-bottom: 2rem;">Mi Perfil</h2>
+
+        @if (ViewBag.Exito != null)
+        {
+            <div class="message exito" style="margin-bottom: 20px;">
+                @ViewBag.Exito
+            </div>
+        }
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NombreCompleto, "Nombre Completo")
+                @Html.TextBoxFor(m => m.NombreCompleto)
+                @Html.ValidationMessageFor(m => m.NombreCompleto, "", new { style = "color: var(--danger); font-size: 0.85rem; margin-top: 5px; display: block;" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Correo, "Correo")
+                @Html.TextBoxFor(m => m.Correo)
+                @Html.ValidationMessageFor(m => m.Correo, "", new { style = "color: var(--danger); font-size: 0.85rem; margin-top: 5px; display: block;" })
+            </div>
+
+            <div class="form-group">
+                <label>Rol asignado</label>
+                <input type="text" value="@Model.NombreRol" disabled style="opacity: 0.6; cursor: not-allowed;" />
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-top: 2.5rem;">
+                <button type="submit" class="btn-primary" style="flex: 1; padding: 1rem; font-size: 1rem;">
+                    Guardar
+                </button>
+                <a href="@Url.Action("CambiarContrasena", "Perfil")" class="btn-secondary" style="flex: 1; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                    Cambiar Contraseña
+                </a>
+            </div>
+        }
+    </div>
+</div>

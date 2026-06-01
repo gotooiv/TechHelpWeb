@@ -1,0 +1,163 @@
+﻿@{
+    ViewBag.Title = "Solicitudes de Soporte TI";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="@Url.Content("~/Content/solicitudes.css")" rel="stylesheet" />
+
+<div class="dashboard">
+    <!-- Tarjeta de registro -->
+    <div class="card glass">
+        <h2 class="card-title"><i class="fas fa-plus-circle"></i> Nueva Solicitud</h2>
+        <form id="formSolicitud">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nombre completo</label>
+                    <input type="text" id="nombreCompleto" value="@ViewBag.NombreCompleto" required />
+                </div>
+                <div class="form-group">
+                    <label>Correo</label>
+                    <input type="email" id="correo" value="@ViewBag.Correo" required />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Área solicitante</label>
+                    <select id="areaId" required>
+                        <option value="">Seleccione</option>
+                        @foreach (var a in ViewBag.Areas)
+                        {
+                            <option value="@a.Id">@a.Nombre</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tipo de problema</label>
+                    <select id="tipoId" required>
+                        <option value="">Seleccione</option>
+                        @foreach (var t in ViewBag.Tipos)
+                        {
+                            <option value="@t.Id">@t.Nombre</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Prioridad</label>
+                    <select id="prioridadId" required>
+                        <option value="">Seleccione</option>
+                        @foreach (var p in ViewBag.Prioridades)
+                        {
+                            <option value="@p.Id">@p.Nombre</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de solicitud</label>
+                    <input type="date" id="fechaSolicitud" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Descripción (mínimo 10 caracteres)</label>
+                <textarea id="descripcion" rows="3" required minlength="10"></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Enviar solicitud</button>
+        </form>
+        <div id="mensajeGlobal" class="message"></div>
+    </div>
+
+    <!-- Tarjeta de historial -->
+    <div class="card glass">
+        <h2 class="card-title"><i class="fas fa-history"></i> Historial de Solicitudes</h2>
+        <div class="table-responsive">
+            <table class="table-modern">
+                <thead>
+                    <tr><th>ID</th><th>Nombre</th><th>Área</th><th>Tipo</th><th>Prioridad</th><th>Estado</th><th>Acciones</th></tr>
+                </thead>
+                <tbody id="tablaSolicitudes">
+                    <tr><td colspan="7">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de edición (con los tres botones de estado) -->
+<div id="modalEditar" class="modal">
+    <div class="modal-content glass">
+        <span class="close" onclick="cerrarModal()">&times;</span>
+        <h3>✏️ Editar Solicitud</h3>
+        <input type="hidden" id="editId" />
+        <input type="hidden" id="editEstadoId" />
+        <div class="form-group">
+            <label>Nombre completo</label>
+            <input type="text" id="editNombre" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label>Correo</label>
+            <input type="email" id="editCorreo" class="form-control" required />
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Área</label>
+                <select id="editAreaId" class="form-control" required>
+                    <option value="">Seleccione</option>
+                    @foreach (var a in ViewBag.Areas)
+                    {
+                        <option value="@a.Id">@a.Nombre</option>
+}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tipo problema</label>
+                <select id="editTipoId" class="form-control" required>
+                    <option value="">Seleccione</option>
+                    @foreach (var t in ViewBag.Tipos)
+                    {
+                        <option value="@t.Id">@t.Nombre</option>
+}
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Prioridad</label>
+                <select id="editPrioridadId" class="form-control" required>
+                    <option value="">Seleccione</option>
+                    @foreach (var p in ViewBag.Prioridades)
+                    {
+                        <option value="@p.Id">@p.Nombre</option>
+}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Fecha solicitud</label>
+                <input type="date" id="editFechaSolicitud" class="form-control" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Descripción</label>
+            <textarea id="editDescripcion" class="form-control" rows="3" required minlength="10"></textarea>
+        </div>
+
+        <!-- Botones de estado dentro del modal -->
+        <div class="estado-actions">
+            <label>Estado actual: <strong id="estadoActualTexto"></strong></label>
+            <div class="button-group">
+                <button type="button" class="badge pendiente" onclick="cambiarEstadoDesdeModal(1)">Pendiente</button>
+                <button type="button" class="badge proceso" onclick="cambiarEstadoDesdeModal(2)">En proceso</button>
+                <button type="button" class="badge resuelto" onclick="cambiarEstadoDesdeModal(3)">Resuelto</button>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
+            <button type="button" class="btn-primary" onclick="guardarEdicion()">Guardar cambios</button>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="@Url.Content("~/Scripts/solicitudes.js")"></script>
+    <script>var usuarioId = @Session["UsuarioId"];</script>
+}

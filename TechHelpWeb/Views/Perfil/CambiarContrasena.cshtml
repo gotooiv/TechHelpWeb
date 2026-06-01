@@ -1,0 +1,52 @@
+﻿@model TechHelpWeb.Models.CambiarContrasenaViewModel
+@{
+    ViewBag.Title = "Cambiar Contraseña";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="dashboard" style="display: flex; justify-content: center; align-items: center; min-height: 75vh;">
+
+    <div class="card" style="width: 100%; max-width: 450px;">
+
+        <h2 class="card-title" style="margin-bottom: 2rem;">Cambiar Contraseña</h2>
+
+        @if (ViewBag.Exito != null)
+        {
+            <div class="message exito" style="margin-bottom: 20px;">
+                @ViewBag.Exito
+            </div>
+        }
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.ContrasenaActual, "Contraseña Actual")
+                @Html.PasswordFor(m => m.ContrasenaActual, new { placeholder = "Ingresa tu contraseña actual" })
+                @Html.ValidationMessageFor(m => m.ContrasenaActual, "", new { style = "color: var(--danger); font-size: 0.85rem; margin-top: 5px; display: block;" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NuevaContrasena, "Nueva Contraseña")
+                @Html.PasswordFor(m => m.NuevaContrasena, new { placeholder = "Crea una nueva contraseña" })
+                @Html.ValidationMessageFor(m => m.NuevaContrasena, "", new { style = "color: var(--danger); font-size: 0.85rem; margin-top: 5px; display: block;" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.ConfirmacionContrasena, "Confirmar Nueva Contraseña")
+                @Html.PasswordFor(m => m.ConfirmacionContrasena, new { placeholder = "Repite la nueva contraseña" })
+                @Html.ValidationMessageFor(m => m.ConfirmacionContrasena, "", new { style = "color: var(--danger); font-size: 0.85rem; margin-top: 5px; display: block;" })
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-top: 2.5rem;">
+                <button type="submit" class="btn-primary" style="flex: 1; padding: 1rem; font-size: 1rem;">
+                    Actualizar
+                </button>
+                <a href="@Url.Action("Index", "Perfil")" class="btn-secondary" style="flex: 1; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                    Cancelar
+                </a>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - TechHelp</title>
+    <link href="@Url.Content("~/Content/solicitudes.css")" rel="stylesheet" />
+</head>
+<body>
+    <nav class="menu-superior">
+        <div class="logo">TechHelp TI</div>
+        <ul>
+            @if (Session["UsuarioId"] != null)
+            {
+                <li><a href="@Url.Action("Crear", "Solicitudes")">Nueva Solicitud</a></li>
+                <li><a href="@Url.Action("Index", "Perfil")">Mi Perfil</a></li>
+                <li><a href="@Url.Action("CambiarContrasena", "Perfil")">Cambiar Contraseña</a></li>
+                <li><a href="@Url.Action("Logout", "Auth")">Cerrar Sesión</a></li>
+            }
+            else
+            {
+                <li><a href="@Url.Action("Login", "Auth")">Iniciar Sesión</a></li>
+            }
+        </ul>
+    </nav>
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
